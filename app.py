@@ -1,6 +1,8 @@
 from flask import Flask,request,jsonify
 from flask_cors import CORS
 from seleniumwire import webdriver
+from seleniumwire.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import os
 
@@ -29,6 +31,21 @@ def get(pageSource,mobile):
     except:
         return {"status":False}
 
+def createDriver() -> webdriver.Chrome:
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--headless")
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    
+    prefs = {"profile.managed_default_content_settings.images":2}
+    chrome_options.headless = True
+
+
+    chrome_options.add_experimental_option("prefs", prefs)
+    myDriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    return myDriver
+    
+    
 @app.route("/")
 def home():
     return {"status":True}
@@ -37,8 +54,7 @@ def home():
 @app.route("/get")
 def do():
     a= request.args.get("id")
-    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"),chrome_options=op)
-    driver.maximize_window()
+    driver = webdriver.Chrome()
     driver.get("https://payonline.narayanagroup.com/")
     id_num = driver.find_element_by_id("txtUid")
     id_num.send_keys(int(a))
