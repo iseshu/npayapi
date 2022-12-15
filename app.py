@@ -8,7 +8,7 @@ import os
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {'Access-Control-Allow-Origin': '*'}})
 op = webdriver.ChromeOptions()
-#op.binary_location = os.environ.get('GOOGLE_CHROME_BIN')
+op.binary_location = os.environ.get('GOOGLE_CHROME_BIN')
 op.add_argument('--headless')
 op.add_argument('--no-sandbox')
 op.add_argument('--disable-dev-sh-usage')
@@ -37,7 +37,7 @@ def home():
 @app.route("/get")
 def do():
     a= request.args.get("id")
-    driver = webdriver.Chrome()
+    driver = webdriver.Chrome(executable_path=os.environ.get("CHROMEDRIVER_PATH"),chrome_options=op)
     driver.maximize_window()
     driver.get("https://payonline.narayanagroup.com/")
     id_num = driver.find_element_by_id("txtUid")
