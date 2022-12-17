@@ -1,11 +1,16 @@
 from flask import Flask,request,jsonify
 from flask_cors import CORS
 from seleniumwire import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import os
 
+options = Options()
+options.add_argument('--disable-dev-shm-usage')
 
 app = Flask(__name__)
 
@@ -23,20 +28,6 @@ def get(pageSource,mobile):
     except:
         return {"status":False}
 
-def createDriver() -> webdriver.Chrome:
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    
-    prefs = {"profile.managed_default_content_settings.images":2}
-    chrome_options.headless = True
-
-
-    chrome_options.add_experimental_option("prefs", prefs)
-    myDriver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
-    return myDriver
-    
     
 @app.route("/")
 def home():
@@ -45,8 +36,8 @@ def home():
 
 @app.route("/get")
 def do():
-    a= request.args.get("id")
-    def getGoogleHomepage(driver: webdriver.Chrome) -> str:
+        a= request.args.get("id")
+        driver  = driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
         driver.get("https://payonline.narayanagroup.com/")
         id_num = driver.find_element_by_id("txtUid")
         id_num.send_keys(int(a))
