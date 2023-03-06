@@ -66,21 +66,21 @@ def do():
 
     driver.get("https://payonline.narayanagroup.com/")
 
-    id_num = driver.find_element_by_id("txtUid")
+    id_num = driver.find_element("id","txtUid")
 
     id_num.send_keys(int(a))
 
-    btn = driver.find_element_by_id("BtnStuGetData")
+    btn = driver.find_element("id","BtnStuGetData")
 
     btn.click()
 
     pageSource = driver.page_source
 
-    amount = driver.find_element_by_id("txtCourseFee")
+    amount = driver.find_element("id","txtCourseFee")
 
     amount.send_keys(1280)
 
-    btn1 = driver.find_element_by_id("btnsubmit")
+    btn1 = driver.find_element("id","btnsubmit")
 
     btn1.click()
 
@@ -97,4 +97,3 @@ def do():
 if __name__ == "__main__":
 
     app.run(host="0.0.0.0")
-
